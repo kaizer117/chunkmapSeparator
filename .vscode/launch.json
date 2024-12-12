@@ -5,10 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: Current File",
+            "name": "chunkmapsep - work",
             "type": "debugpy",
             "request": "launch",
-            "program": "${file}",
+            "program": "C:/Users/kavindu.NUSSTF/OneDrive - National University of Singapore/Documents/Python Scripts/chunkmapSeparator/code/main.py",
+            "console": "integratedTerminal"
+        }
+        ,
+        {
+            "name": "chunkmapsep - home",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "C:/Users/kavindu.NUSSTF/OneDrive - National University of Singapore/Documents/Python Scripts/chunkmapSeparator/code/main.py",
             "console": "integratedTerminal"
         }
     ]
