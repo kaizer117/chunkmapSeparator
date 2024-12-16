@@ -28,6 +28,8 @@ class cons():
         self.centeroid=list(map(lambda d: (d['m10'] / (d['m00'] + 1e-5), d['m01'] / (d['m00'] + 1e-5)),self.mu))
         # add contor area
         self.area=list(map(lambda d: d['m00'],self.mu))
+        
+        
             
     def setcmap(self,cmap,i):
         

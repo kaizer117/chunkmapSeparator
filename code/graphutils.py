@@ -28,3 +28,6 @@ def plotconsHierarchy(consObj,mplcmap,suptitle):
 
 def plotconsIndexes():
     pass
+
+def plothist():
+    pass
