@@ -32,7 +32,7 @@ cons1=cutils.cons(contours,hierarchy)
 
 
 
-gutils.plotconsHierarchy(img,cons1,cm.spring,'Feature visualizaton')
+gutils.plotconsHierarchy(cons1,cm.spring,'Feature visualizaton')
 # plt.imshow(img)
 # i=0
 # for con in contours:

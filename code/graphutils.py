@@ -1,3 +1,8 @@
+'''
+This submodule contains graphing utilities for visualizing contours
+'''
+
+
 import matplotlib.pyplot as plt
 import programutils as putils
 
