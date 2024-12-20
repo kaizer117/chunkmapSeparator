@@ -34,8 +34,9 @@ class cons():
     def setcmap(self,cmap,i):
         
         '''
-        params: cmap
+        params: cmap,i
             cmap: matplotlib.cm object
+            i: int 0 to 3. picks the
         output: ret
             ret: lists of colors at lenght(contour) for the respective colormap
 

@@ -10,6 +10,10 @@ import programutils as putils
 
 def plotconsHierarchy(consObj,mplcmap,suptitle):
     
+    '''
+    plots the 4 features of a hierarchy dataset onto the 
+    '''
+    
     fig, axs = plt.subplots(2, 2)
     textSizer=putils.norm01(consObj.area)
     
@@ -28,8 +32,11 @@ def plotconsHierarchy(consObj,mplcmap,suptitle):
         plt.title('hierarchy '+str(i)+' hierarchy feature')
     
     plt.suptitle(suptitle)
-    plt.show()
-    return None
+    
+    return plt
+
+def plotCons():
+    pass
 
 def plotconsIndexes():
     pass

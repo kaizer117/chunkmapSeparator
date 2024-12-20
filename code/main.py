@@ -12,14 +12,9 @@ import graphutils as gutils
 inputimg='big-example-wo-border.png'
 img = cv.imread('./resources/'+inputimg, cv.IMREAD_UNCHANGED)
 
+#
 opac,hist=cutils.histimg(img)
 
-# plotting opacity histogram
-
-# plt.plot(hist)
-# plt.title("Opacity Histogram")
-# plt.xlim([250,256])
-# plt.show()
 
 ret,thresh1 = cv.threshold(opac,252,255,cv.THRESH_BINARY)
 
@@ -32,13 +27,9 @@ cons1=cutils.cons(contours,hierarchy)
 
 
 
-gutils.plotconsHierarchy(cons1,cm.spring,'Feature visualizaton')
-# plt.imshow(img)
-# i=0
-# for con in contours:
-#     plt.plot(con[:,0,0],con[:,0,1],color=cmap[i],marker='o',markersize=0.5)
-#     plt.text(mc[i][0],mc[i][1],str(i),fontdict={'fontsize':areanorm[i]*10+7})
-#     i+=1
+plt=gutils.plotconsHierarchy(cons1,cm.spring,'Feature visualizaton')
+plt.show()
+
 
 print('end')
 
