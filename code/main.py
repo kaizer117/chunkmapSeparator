@@ -8,11 +8,14 @@ import matplotlib.cm as cm
 import cvutils as cutils
 import programutils as putils
 import graphutils as gutils
+import fileutils as futils
+
+# load input image
 
 inputimg='big-example-wo-border.png'
 img = cv.imread('./resources/'+inputimg, cv.IMREAD_UNCHANGED)
 
-#
+# creating a histogram and splitting opacity
 opac,hist=cutils.histimg(img)
 
 
