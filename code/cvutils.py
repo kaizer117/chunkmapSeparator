@@ -58,3 +58,9 @@ def histimg(img):
 
 def binarize(img):
     return None
+
+def con2ll(con):
+    '''
+    function to convert list of points to a linked list with front and back traversal properties
+    '''
+    return None
