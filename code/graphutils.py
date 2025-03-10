@@ -35,6 +35,12 @@ def plotconsHierarchy(consObj,mplcmap,suptitle):
     
     return plt
 
+def plotCon(img_size,con):
+    # plots one contour
+    plt.plot(con[:,0,0],-1*con[:,0,1],marker='o',markersize=0.1)
+    plt.xlim(0,img_size[1])
+    plt.ylim(-1*img_size[0],0)
+    return plt
 def plotCons():
     pass
 

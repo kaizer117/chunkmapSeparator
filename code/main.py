@@ -30,8 +30,16 @@ cons1=cutils.cons(contours,hierarchy)
 
 
 
-plt=gutils.plotconsHierarchy(cons1,cm.spring,'Feature visualizaton')
-plt.show()
+#plt=gutils.plotconsHierarchy(cons1,cm.spring,'Feature visualizaton')
+#plt.show()
+
+
+# contour to svg
+
+img_size=np.shape(img)
+futils.saveCons(img_size,contours)
+
+
 
 
 print('end')
