@@ -24,31 +24,17 @@ def hsl2rgb(hsl):
     Hdash=h/60
     X=C*(1-np.abs((Hdash%2)-1))
     
-    if (Hdash<1):
-        r1=C
-        g1=X
-        b1=0
-    elif(Hdash<2):
-        r1=X
-        g1=C
-        b1=0
-    elif(Hdash<3):
-        r1=0
-        g1=C
-        b1=X
-    elif(Hdash<4):
-        r1=0
-        g1=X
-        b1=C
-    elif(Hdash<5):
-        r1=X
-        g1=0
-        b1=C
-    else:
-        r1=C
-        g1=0
-        b1=X
+    # what used to be in the code block below was a bunch of if statements
+    # refer to \resources\hsl_kmaps.xlsx to understand the working behind the code below
+    # refer from row 58 onwards
     
+    lTmp=[0,C,X]
+    lTmpindex=[1,2,0,0,2,1]
+    dt= int(Hdash)
+    
+    r1,g1,b1=lTmp[lTmpindex[(dt%6)]],lTmp[lTmpindex[((dt+2)%6)]],lTmp[lTmpindex[((dt+4)%6)]]
+    
+    # end of what used to be if statements, what continues is normal calculation
     m=l-(C/2)
     
     return (r1+m,g1+m,b1+m)
@@ -56,23 +42,47 @@ def hsl2rgb(hsl):
 def hsl2hex(hsl):
     return rgb2hex(hsl2rgb(hsl))
 
-def populatePalette(h,n):
+
+def populatePalette(h,n,sampling='linear',picking='linear'):
     m=12         #for each 7 colours, new hue value
     hN=n//m
     hVar=4 #degrees
+    
+    
     sClampParams=[0.3,0.8,0.1] # start end var
     lClampParams=[0.3,0.8,0.1] # start end var
     
-    print(m,hN)
-    hVals=np.linspace(h-(hN/2)*hVar,h+(hN/2)*hVar,hN+2) #    <----h---->
-    print(m,hN,len(hVals))
+    
+    
+    
     #create s and l value min and max
+    hClamp=[h-(hN/2)*hVar,h+(hN/2)*hVar]
     sClamp=[sClampParams[0]+sClampParams[2]*np.random.rand(),sClampParams[1]-sClampParams[2]*np.random.rand()]
     lClamp=[lClampParams[0]+lClampParams[2]*np.random.rand(),lClampParams[1]-lClampParams[2]*np.random.rand()]
     
     #generate m number of s and l values
-    sVals=np.linspace(sClamp[0],sClamp[1],m)
-    lVals=np.linspace(lClamp[0],lClamp[1],m)
+    
+    if (sampling=='linear'):
+        # generate h s l values within the clamp values linearly
+        hVals=np.linspace(hClamp[0],hClamp[1],hN+2) #    <----h---->
+        sVals=np.linspace(sClamp[0],sClamp[1],m)
+        lVals=np.linspace(lClamp[0],lClamp[1],m)
+    elif (sampling=='random'):
+        hVals=np.random.rand(hN+2)*(hClamp[1]-hClamp[0])+hClamp[0]
+        sVals=np.random.rand(m)*(sClamp[1]-sClamp[0])+sClamp[0]
+        lVals=np.random.rand(m)*(lClamp[1]-lClamp[0])+lClamp[0]
+        
+    elif (sampling=='random_justified'):
+        pass
+    
+    #ensuring boundary conformance
+    for i,v in enumerate(hVals):
+        if (v>360):
+            hVals[i]=hVals[i]-360
+            continue
+        if (v<0):
+            hVals[i]=hVals[i]+360
+            continue
     
     #if n is not divisible by m, dealing with the remainder
     cmap=[]
@@ -80,15 +90,26 @@ def populatePalette(h,n):
     if (r):
         r0=np.random.randint(r)
         r1=r-r0
-        print(r0,r1)
-        cmap.extend(list(map(lambda i: [hVals[0],sVals[np.random.randint(m)],sVals[np.random.randint(m)]],range(r0))))
-        cmap.extend(list(map(lambda i: [hVals[-1],sVals[np.random.randint(m)],sVals[np.random.randint(m)]],range(r1))))
-    # declaring and populating cmap
+        if (picking=='linear'):
+            cmap.extend(list(map(lambda i: [hVals[0],sVals[np.random.randint(m)],sVals[np.random.randint(m)]],range(r0))))
+            cmap.extend(list(map(lambda i: [hVals[-1],sVals[np.random.randint(m)],sVals[np.random.randint(m)]],range(r1))))
+            
+        elif (picking=='shuffle'):
+            np.random.shuffle(hVals)
+            np.random.shuffle(sVals)
+            np.random.shuffle(lVals)
+            cmap.extend(list(map(lambda i: [hVals[0],sVals[np.random.randint(m)],sVals[np.random.randint(m)]],range(r0))))
+            cmap.extend(list(map(lambda i: [hVals[-1],sVals[np.random.randint(m)],sVals[np.random.randint(m)]],range(r1))))
     
-    for i in range(1,hN+1):
-        cmap.extend(list(map(lambda j: [hVals[i],sVals[j],lVals[j]],range(m))))
-    
-    
+    # populating cmap
+    if (picking=='linear'):
+        for i in range(1,hN+1):
+            cmap.extend(list(map(lambda j: [hVals[i],sVals[j],lVals[j]],range(m))))
+    elif (picking=='shuffle'):
+        for i in range(1,hN+1):
+            np.random.shuffle(sVals)
+            np.random.shuffle(lVals)
+            cmap.extend(list(map(lambda j: [hVals[i],sVals[j],lVals[j]],range(m))))
     return cmap
 
 def lightnessIndex(d):
@@ -97,20 +118,21 @@ def lightnessIndex(d):
 if (__name__=="__main__"):
     
     save_path=futils.createFolder('outputs')
-
-    f=open(save_path+'\\colorspaces.svg','w')
+    
     n=143
+    n+=1
+    
+    hue=30
+    cmap=populatePalette(hue,n,sampling='random',picking='shuffle')
+    cmap.append([hue,0.5,0.5])
     
     b=np.round(np.sqrt(n))
     w=b-int(b*0.1)
     h=(n//w)+((n%w)!=0)*1
     
-    cmap=populatePalette(150,n)
-    
     f=open(save_path+'\\colorspaces.svg','w')
     
     s=''
-    
     s+='<?xml version="1.0" standalone="no"?>\n'
     s+='<svg width="'+str(w*50)+'px"'
     s+=' height="'+str(h*50)+'px"'
