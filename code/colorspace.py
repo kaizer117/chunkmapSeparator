@@ -44,6 +44,9 @@ def hsl2hex(hsl):
 
 
 def populatePalette(h,n,sampling='linear',picking='linear'):
+    '''
+    This function takes a hue value and populated a color palatte with adjacent values
+    '''
     m=12         #for each 7 colours, new hue value
     hN=n//m
     hVar=4 #degrees
@@ -118,37 +121,36 @@ def lightnessIndex(d):
 if (__name__=="__main__"):
     
     save_path=futils.createFolder('outputs')
-    
     n=143
     n+=1
-    
-    hue=30
-    cmap=populatePalette(hue,n,sampling='random',picking='shuffle')
-    cmap.append([hue,0.5,0.5])
-    
-    b=np.round(np.sqrt(n))
-    w=b-int(b*0.1)
-    h=(n//w)+((n%w)!=0)*1
-    
-    f=open(save_path+'\\colorspaces.svg','w')
-    
-    s=''
-    s+='<?xml version="1.0" standalone="no"?>\n'
-    s+='<svg width="'+str(w*50)+'px"'
-    s+=' height="'+str(h*50)+'px"'
-    s+=' viewbox="'+'0'+' '+'0'+' '+str(w*50)+' '+str(h*50)+'"'
-    s+=' xmlns="http://www.w3.org/2000/svg" version="1.1">\n'
-    
-    for i in range(n):
-        s+='<rect'
-        s+=' style="fill:'+hsl2hex(cmap[i])+';stroke-width:1;stroke-linejoin:round;fill-opacity:1;stroke:none"'
-        s+=' width="50"'
-        s+=' height="50"'
-        s+=' x="'+str((i%w)*50)+'"'
-        s+=' y="'+str((i//w)*50)+'" />'
-        s+='\n'
-    s+='\n</svg>'
-    
-    f.write(s)
-    f.close()
+    for hue in range(360):    
+        
+        cmap=populatePalette(hue,n,sampling='random',picking='shuffle')
+        cmap.append([hue,0.5,0.5])
+        
+        b=np.round(np.sqrt(n))
+        w=b-int(b*0.1)
+        h=(n//w)+((n%w)!=0)*1
+        
+        f=open(save_path+'\\'+str(hue)+'.svg','w')
+        
+        s=''
+        s+='<?xml version="1.0" standalone="no"?>\n'
+        s+='<svg width="'+str(w*50)+'px"'
+        s+=' height="'+str(h*50)+'px"'
+        s+=' viewbox="'+'0'+' '+'0'+' '+str(w*50)+' '+str(h*50)+'"'
+        s+=' xmlns="http://www.w3.org/2000/svg" version="1.1">\n'
+        
+        for i in range(n):
+            s+='<rect'
+            s+=' style="fill:'+hsl2hex(cmap[i])+';stroke-width:1;stroke-linejoin:round;fill-opacity:1;stroke:none"'
+            s+=' width="50"'
+            s+=' height="50"'
+            s+=' x="'+str((i%w)*50)+'"'
+            s+=' y="'+str((i//w)*50)+'" />'
+            s+='\n'
+        s+='\n</svg>'
+        
+        f.write(s)
+        f.close()
     print('Hi')
