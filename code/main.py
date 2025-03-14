@@ -9,21 +9,22 @@ import cvutils as cutils
 import programutils as putils
 import graphutils as gutils
 import fileutils as futils
+import colorspace as colutils
 
 # load input image
 
-inputimg='big-example-wo-border.png'
+inputimg='example-cuba.png'
 img = cv.imread('./resources/'+inputimg, cv.IMREAD_UNCHANGED)
 
 # creating a histogram and splitting opacity
 opac,hist=cutils.histimg(img)
 
-
+# why deos this function return two values and what is ret
 ret,thresh1 = cv.threshold(opac,252,255,cv.THRESH_BINARY)
 
 
 
-contours, hierarchy = cv.findContours(thresh1, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE)
+contours, hierarchy = cv.findContours(thresh1, cv.RETR_CCOMP, cv.CHAIN_APPROX_NONE)
 
 
 cons1=cutils.cons(contours,hierarchy)
@@ -35,9 +36,10 @@ cons1=cutils.cons(contours,hierarchy)
 
 
 # contour to svg
+cmap=colutils.cmapHex(12,len(contours),'random','shuffle')
 
 img_size=np.shape(img)
-futils.saveCons(img_size,contours)
+futils.saveCons(img_size,contours,cmap,'outputs','cuba_ex')
 
 
 

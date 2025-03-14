@@ -46,6 +46,9 @@ def hsl2hex(hsl):
 def populatePalette(h,n,sampling='linear',picking='linear'):
     '''
     This function takes a hue value and populated a color palatte with adjacent values
+    
+    sampling methods: linear, random
+    picking methods: linear, shuffle
     '''
     m=12         #for each 7 colours, new hue value
     hN=n//m
@@ -115,8 +118,20 @@ def populatePalette(h,n,sampling='linear',picking='linear'):
             cmap.extend(list(map(lambda j: [hVals[i],sVals[j],lVals[j]],range(m))))
     return cmap
 
+def cmapHex(h,n,sampling='linear',picking='linear'):
+    return list(map(hsl2hex,populatePalette(h,n,sampling,picking)))
+
 def lightnessIndex(d):
     pass
+
+class cmapIter():
+    def __init(self,h,sampling,picking):
+        self.hue=h
+        self.sampl=sampling
+        self.pck=picking
+        self.hvar=4
+    
+    
 
 if (__name__=="__main__"):
     
