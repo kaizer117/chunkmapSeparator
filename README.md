@@ -1,11 +1,15 @@
 # Chunk Map Separator
+
+<style>
+img {display:block;margin:auto;width: 90%; height: 90%}
+</style>
 <p style="text-align:center">
 <cite>The good cartographer is both a scientist and an artist. </cite>
 <br><b>Erwin Josephus Raisz (1893 – 1968)</b>
 </p> 
-<img src="resources/read_me_rcs/readme_banner.png" height=200 style="display:block;margin:auto;width: 50%;" > <br>
+<img src="resources/read_me_rcs/readme_banner.png" > <br>
 <p>
-Chunk Map Seprator is a convenient piece of software that can help with creating high-quality maps with beautiful procedurely generated color palattes. <br>Primarily written in python, this software allows you to beautify your maps, create visually striking details and customize color palattes to your hearts content.<br><b>Note: This project is still WIP with many fetaures yet to come</b> </p>
+Chunk Map Seprator is a convenient piece of software that can help with creating high-quality maps with beautiful procedurely generated color palattes. Primarily written in python, this software allows you to beautify your maps, create visually striking details and customize color palattes to your hearts content.<br><b>Note: This project is still WIP with many fetaures yet to come</b> </p>
 
 
 
@@ -27,7 +31,7 @@ For your first step, you should have a map with an transparent background and bo
 
 Save this file under any name you like in the <code>\\resources</code> folder. I've saved the image above as <code>example-cuba.png</code>.<br>
 
-<img src="resources/read_me_rcs/1.png" width=300><br>
+<img src="resources/read_me_rcs/1.png" height=200><br>
 
 Assuming you have followed the above instructions to the dot, open <code>\\code\\main.py</code>.<br><br>
 In the <code>main.py</code> code, locate <code>inputImg</code> variable and change the variable name to the file name of your border map.<br>
