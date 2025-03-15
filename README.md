@@ -1,8 +1,9 @@
 # Chunk Map Separator
-
+<p style="opacity:0.0;">
 <style>
 img {display:block;margin:auto;width: 90%; height: 90%}
 </style>
+</p>
 <p style="text-align:center">
 <cite>The good cartographer is both a scientist and an artist. </cite>
 <br><b>Erwin Josephus Raisz (1893 – 1968)</b>
