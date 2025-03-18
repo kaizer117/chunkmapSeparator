@@ -1,14 +1,12 @@
-# Chunk Map Separator
-<p style="opacity:0.0;">
-<style>
-img {display:block;margin:auto;width: 90%; height: 90%}
-</style>
-</p>
+<h1>Chunk Map Separator</h1>
+
 <p style="text-align:center">
 <cite>The good cartographer is both a scientist and an artist. </cite>
 <br><b>Erwin Josephus Raisz (1893 – 1968)</b>
 </p> 
-<img src="resources/read_me_rcs/readme_banner.png" > <br>
+
+
+<img src="resources/read_me_rcs/readme_banner.png" style="display:block;margin:auto;width: 90%; height: 90%"> <br>
 <p>
 Chunk Map Seprator is a convenient piece of software that can help with creating high-quality maps with beautiful procedurely generated color palattes. Primarily written in python, this software allows you to beautify your maps, create visually striking details and customize color palattes to your hearts content.<br><b>Note: This project is still WIP with many fetaures yet to come</b> </p>
 
@@ -28,16 +26,16 @@ For an example for the workflow, I will be using this map of Cuban Islands, I am
 
 For your first step, you should have a map with an transparent background and borders drawn in black color, as shown below.<br>
 
-<img src="resources/read_me_rcs/example-cuba-transparent-background.png" width=500><br>
+<img src="resources/read_me_rcs/example-cuba-transparent-background.png" style="display:block;margin:auto;width: 90%; height: 90%"><br>
 
 Save this file under any name you like in the <code>\\resources</code> folder. I've saved the image above as <code>example-cuba.png</code>.<br>
 
-<img src="resources/read_me_rcs/1.png" height=200><br>
+<img src="resources/read_me_rcs/1.png" style="display:block;margin:auto;width: 90%; height: 90%"><br>
 
 Assuming you have followed the above instructions to the dot, open <code>\\code\\main.py</code>.<br><br>
 In the <code>main.py</code> code, locate <code>inputImg</code> variable and change the variable name to the file name of your border map.<br>
 
-<img src="resources/read_me_rcs/2.png" height=100><br>
+<img src="resources/read_me_rcs/2.png" style="display:block;margin:auto;width: 90%; height: 90%"><br>
 
 You have now, successfully loaded an image into the program.
 
@@ -66,17 +64,17 @@ If you prefer more randomness, pick both options to be Random. If you prefer a l
 
 
 I have picked 12 as my hue value, "random" as my sampling procedure and "shuffle" as my picking procedure. Enter your values into the <code>colutils.cmapHex(..</code> line as shown below.<br>
-<img src="resources/read_me_rcs/3.png" height=100><br>
+<img src="resources/read_me_rcs/3.png" style="display:block;margin:auto;width: 90%; height: 90%"><br>
 
 <h3>Generating SVG</h3>
 
 Finally, take a gander at the <code>futils.saveCons(..</code> line. The third and fourth parameters are for the output file location and output file name. As is seen in the last image, I will be saing to the outputs folder inside the repository, and I would be naming the file <code>cuba-ex</code>.<br>
 
 You are now ready to run the <code>main.py</code> file. If all goes well, the python file should runwithout errors. You should be seeing an svg file under the folder <code>outputs</code><br>
-<img src="resources/read_me_rcs/4.png" height=100><br>
+<img src="resources/read_me_rcs/4.png" style="display:block;margin:auto;width: 90%; height: 90%"><br>
 
 You can open the svg file with a web browser or any vector editor. I have opened the output file in Inkscape.<br>
-<img src="resources/read_me_rcs/svg-open.png" height=500><br>
+<img src="resources/read_me_rcs/svg-open.png" style="display:block;margin:auto;width: 90%; height: 90%"><br>
 </p>
 
 
