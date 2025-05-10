@@ -133,15 +133,77 @@ def saveConDepricated(ex,img_size,file_name,fill_color='#000000'):
     f.close()
     return None
 
+def svgfileinit(img_size):
+    '''
+    This function will generate the boiler plate stuff of the svg
+    '''
+    blr=''
+    blr+='<?xml version="1.0" standalone="no"?>\n'
+
+
+    blr+='<svg width="'+str(img_size[1])+'px"'
+    blr+=' height="'+str(img_size[0])+'px"'
+    blr+=' viewbox="'+'0'+' '+'0'+' '+str(img_size[1])+' '+str(img_size[0])+'"'
+
+    blr+=' xmlns="http://www.w3.org/2000/svg" version="1.1">\n'
+    return blr
+
+def svgfileclose(blr):
+    '''
+    This function simply closes the svg file by applying the closing tag
+    '''
+    blr+='\n</svg>'
+    return blr
+
+def svgaddstyletag(blr,d):
+    '''
+    blr: svg text to save
+    d: dictionary of style guides
+    structure of d:
+    d => { styleName :{ property : value,... } }
+    '''
+    blr+='<style type="text/css"><![CDATA[\n'
+    for stl in d.keys():
+        blr+='.'+stl+' {'
+        for prop in d[stl].keys():
+            blr+=prop+':'+d[stl][prop]+'; '
+        blr=blr[:-2]
+        blr+='}\n'
+    blr+=']]></style>\n'
+    return blr
+
+def svgdrawcircle(blr,c,r,stl):
+    blr+='<circle class="'+stl+'" cx="'+str(c[0])+'" cy="'+str(c[1])+'"'+' r="'+str(r)+'" />\n'
+    return blr
+
+def svgdrawline(blr,p1,p2,stl):
+    blr+='<path class="'+stl+'" d="M '+str(p1[0])+','+str(p1[1])+' '+str(p2[0])+','+str(p2[1])+'" />\n'
+    return blr
+
+def svgdrawcubicbezier(blr,c1,c2,c3,c4,stl):
+    blr+='<path class="'+stl+'" d="M '+str(c1[0])+','+str(c1[1])+' C '+str(c2[0])+','+str(c2[1])+' '+str(c3[0])+','+str(c3[1])+' '+str(c4[0])+','+str(c4[1])+'" />\n'
+    return blr
+
+def svgsave(blr,loc='outputs',filename='drawing'):
+    save_path=createFolder(loc)
+    f = open(save_path+'\\'+filename+'.svg', "w")
+    f.write(blr)
+    f.close()
+    return save_path
+
+
 def newSession():
+    '''
+    I have forgotten what this is supposed to be.
+    '''
     pass
 
 if(__name__=='__main__'):
-    f=open(cwd+'\\resources\\cuba_ex.svg','r')
-    s=f.read()
+    # d={'Border':{ 'fill':'none', 'stroke':'blue', 'stroke-width':'1' },
+    #    'Connect': { 'fill':'none', 'stroke':'#888888', 'stroke-width':'2' }}
+    # print(svgaddstyletag('',d))
     
-    pat=r'(#\w{6})'
-    
-    cmapNew=colutils.cmapHex(12,len(re.findall(pat,s)),'random','random')
-    f.close()
+    print(svgdrawcircle('',[2,3],0.5,'datapoint'))
+    print(svgdrawline('',[1,2],[3,4],'line'))
+    print(svgdrawcubicbezier('',[1,2],[3,4],[4,5],[5,6],'the'))
     print('end')
