@@ -176,12 +176,21 @@ def svgdrawcircle(blr,c,r,stl):
     blr+='<circle class="'+stl+'" cx="'+str(c[0])+'" cy="'+str(c[1])+'"'+' r="'+str(r)+'" />\n'
     return blr
 
-def svgdrawline(blr,p1,p2,stl):
-    blr+='<path class="'+stl+'" d="M '+str(p1[0])+','+str(p1[1])+' '+str(p2[0])+','+str(p2[1])+'" />\n'
+def svgdrawline(blr,p,stl):
+    blr+='<path class="'+stl+'" d="M '
+    
+    for point in p:
+        blr+=str(point[0])+','+str(point[1])+' '
+        
+    blr=blr[:-1]+'" />\n'
     return blr
 
-def svgdrawcubicbezier(blr,c1,c2,c3,c4,stl):
-    blr+='<path class="'+stl+'" d="M '+str(c1[0])+','+str(c1[1])+' C '+str(c2[0])+','+str(c2[1])+' '+str(c3[0])+','+str(c3[1])+' '+str(c4[0])+','+str(c4[1])+'" />\n'
+def svgdrawcubicbezier(blr,c,stl):
+    blr+='<path class="'+stl+'" d="M '+str(c[0][0])+','+str(c[0][1])+' C '
+    
+    for point in c[1:]:
+        blr+=str(point[0])+','+str(point[1])+' '
+    blr=blr[:-1]+'" />\n'
     return blr
 
 def svgsave(blr,loc='outputs',filename='drawing'):
@@ -204,6 +213,6 @@ if(__name__=='__main__'):
     # print(svgaddstyletag('',d))
     
     print(svgdrawcircle('',[2,3],0.5,'datapoint'))
-    print(svgdrawline('',[1,2],[3,4],'line'))
-    print(svgdrawcubicbezier('',[1,2],[3,4],[4,5],[5,6],'the'))
+    print(svgdrawline('',[[1,2],[3,4]],'line'))
+    print(svgdrawcubicbezier('',[[1,2],[3,4],[4,5],[5,6]],'the'))
     print('end')
