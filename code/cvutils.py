@@ -64,3 +64,9 @@ def con2ll(con):
     function to convert list of points to a linked list with front and back traversal properties
     '''
     return None
+
+def linearShift(sX,sY):
+    """
+    THis function will shift the raster contour data so the final image can have good cropping
+    """
+    pass

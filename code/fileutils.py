@@ -193,6 +193,14 @@ def svgdrawcubicbezier(blr,c,stl):
     blr=blr[:-1]+'" />\n'
     return blr
 
+def svgdrawclosedcubicbezier(blr,c,stl):
+    blr+='<path class="'+stl+'" d="M '+str(c[0][0])+','+str(c[0][1])+' C '
+    
+    for point in c[1:]:
+        blr+=str(point[0])+','+str(point[1])+' '
+    blr=blr[:-1]+'" Z/>\n'
+    return blr
+
 def svgsave(blr,loc='outputs',filename='drawing'):
     save_path=createFolder(loc)
     f = open(save_path+'\\'+filename+'.svg', "w")
@@ -200,7 +208,17 @@ def svgsave(blr,loc='outputs',filename='drawing'):
     f.close()
     return save_path
 
+def saveConsVectorized(controlPoints):
+    """
+    This function should use the following
+    svgfileinit
+    svgaddstyletag
+    svgdrawcubicbezier
+    svgfileclose
 
+    To output an SVG file with the proper vectorized shapes as a cubic bezier curve
+    """
+    pass
 def newSession():
     '''
     I have forgotten what this is supposed to be.

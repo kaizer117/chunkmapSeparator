@@ -39,7 +39,7 @@ cons1=cutils.cons(contours,hierarchy)
 cmap=colutils.cmapHex(12,len(contours),'random','shuffle')
 
 img_size=np.shape(img)
-futils.saveCons(img_size,contours,cmap,'outputs','cuba_ex')
+# futils.saveCons(img_size,contours,cmap,'outputs','cuba_ex')
 
 
 
