@@ -61,12 +61,34 @@ def binarize(img):
 
 def con2ll(con):
     '''
+    Is this really needed?
     function to convert list of points to a linked list with front and back traversal properties
     '''
     return None
 
 def linearShift(sX,sY):
     """
-    THis function will shift the raster contour data so the final image can have good cropping
+    THis function will shift the raster contour data so the final image can have have good cropping
     """
     pass
+
+def conReshaper(con):
+    """
+    This function changes single contours
+    The cv function returns the countours in a peculiar format.
+
+    It will wrap the points in 1 more layer of list as exampled below
+    [ [ [x1 , y1] ] , [ [x2 , y2] ] ] => [ [x1 , y1] , [x2 , y2] ]
+
+    """
+    return np.reshape(con,(len(con),2))
+
+def contoursRehsaper(cons):
+    """
+    This function changes multiple contours (list of lists)
+    Wrapper for individual conReshaper
+    """
+    l = []
+    for con in cons:
+        l.append(conReshaper(con))
+    return l
