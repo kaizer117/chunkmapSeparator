@@ -102,106 +102,127 @@ class SVGHandler():
     :var returns: Description
     """
     def __init__(self):
-        return None
-
-def svgfileinit(img_size):
-    '''
-    This function will generate the boiler plate stuff of the svg
-
-    :param img_size: (X,Y) size a tuple or a list of 2 pairs of values usually in px values
-
-    returns:
-    :param blr: string containing the contents of svg file
-    '''
-    blr=''
-    blr+='<?xml version="1.0" standalone="no"?>\n'
-
-
-    blr+='<svg width="'+str(img_size[1])+'px"'
-    blr+=' height="'+str(img_size[0])+'px"'
-    blr+=' viewbox="'+'0'+' '+'0'+' '+str(img_size[1])+' '+str(img_size[0])+'"'
-
-    blr+=' xmlns="http://www.w3.org/2000/svg" version="1.1">\n'
-    return blr
-
-def svgfileclose(blr):
-    '''
-    This function simply closes the svg file by applying the closing tag
-    '''
-    blr+='\n</svg>'
-    return blr
-
-def svgaddstyletag(blr,d):
-    '''
-    blr: svg text to save
-    d: dictionary of style guides
-    structure of d:
-    d => { styleName :{ property : value,... } }
-    '''
-    blr+='<style type="text/css"><![CDATA[\n'
-    for stl in d.keys():
-        blr+='.'+stl+' {'
-        for prop in d[stl].keys():
-            blr+=prop+':'+d[stl][prop]+'; '
-        blr=blr[:-2]
-        blr+='}\n'
-    blr+=']]></style>\n'
-    return blr
-
-def svgdrawcircle(blr,c,r,stl):
-    blr+='<circle class="'+stl+'" cx="'+str(c[0])+'" cy="'+str(c[1])+'"'+' r="'+str(r)+'" />\n'
-    return blr
-
-def svgdrawline(blr,p,stl):
-    """
-    Appends a path tag to the blr string, for straight lines
-    
-    :param blr: string containing the contents of svg file
-    :param p: list of cartesian coordinates
-    :param stl: name of the object in the style tag
-
-    #returns
-    :param blr: string containing the contents of svg file
-    """
-    
-    blr+='<path class="'+stl+'" d="M '+str(p[0][0])+','+str(p[0][1])+' L '
-    
-    for point in p[1:]:
-        blr+=str(point[0])+','+str(point[1])+' '
+        self.header = ''
+        self.styletag = ''
+        self.paths = ''
+        self.composed = ''
+        self.end = '\n</svg>'
         
-    blr=blr[:-1]+'" />\n'
-    return blr
-
-
-
-def svgdrawcubicbezier(blr,c,stl,closed=True):
-    """
-    Appends a path tag to the blr string, for closed cubic bezier curves
+    def clear(self):
+        self.header = ''
+        self.styletag = ''
+        self.paths = ''
+        self.composed = ''
     
-    :param blr: string containing the contents of svg file
-    :param c: list of controlpoints for cubic bezier curve
-    :param stl: name of the object in the style tag
+    def initialize(self, img_size):
+        '''
+        This function will generate the boiler plate stuff of the svg
 
-    returns:
-    :param blr: string containing the contents of svg file
-    """
-    blr+='<path class="'+stl+'" d="M '+str(c[0][0])+','+str(c[0][1])+' C '
-    
-    for point in c[1:]:
-        blr+=str(point[0])+','+str(point[1])+' '
-    
-    if (closed == True):
-        blr=blr[:-1]+'z" />\n'
-    else:
-        blr=blr[:-1]+'" />\n'
-    return blr
+        :param img_size: (X,Y) size a tuple or a list of 2 pairs of values usually in px values
+        '''
+        s=''
+        s+='<?xml version="1.0" standalone="no"?>\n'
 
-def svgsave(blr,loc='outputs',filename='drawing'):
-    save_path=createFolder(loc)
-    f = open(save_path+'\\'+filename+'.svg', "w")
-    f.write(blr)
-    f.close()
-    return save_path
+
+        s+='<svg width="'+str(img_size[1])+'px"'
+        s+=' height="'+str(img_size[0])+'px"'
+        s+=' viewbox="'+'0'+' '+'0'+' '+str(img_size[1])+' '+str(img_size[0])+'"'
+
+        s+=' xmlns="http://www.w3.org/2000/svg" version="1.1">\n'
+        self.header=s
+    
+    def compose(self):
+        if (self.header == '' or self.paths == ''):
+            raise ValueError("Initialize header and body before composing")
+        self.file = self.header + self.styletag + self.paths + self.end
+    
+    def save(self,loc='outputs',filename='drawing'):
+        if (self.file == ''):
+            raise ValueError("Compose SVG before saving")
+        save_path=createFolder(loc)
+        f = open(save_path+'\\'+filename+'.svg', "w")
+        f.write(self.file)
+        f.close()
+        return save_path
+
+    def addstyletag(self,d):
+        '''
+        blr: svg text to save
+        d: dictionary of style guides
+        structure of d:
+        d => { styleName :{ property : value,... } }
+        '''
+        s=''
+        s+='<style type="text/css"><![CDATA[\n'
+        for stl in d.keys():
+            s+='.'+stl+' {'
+            for prop in d[stl].keys():
+                s+=prop+':'+d[stl][prop]+'; '
+            s=s[:-2]
+            s+='}\n'
+        s+=']]></style>\n'
+        self.styletag+=s
+
+    def drawcircle(self,c,r,stl):
+        """
+        Docstring for svgdrawcircle
+        
+        :param c: center of the circle
+        :param r: radius of the circle
+        :param stl: Description
+        """
+        s='<circle class="'+stl+'" cx="'+str(c[0])+'" cy="'+str(c[1])+'"'+' r="'+str(r)+'" />\n'
+        self.paths+=s
+
+    def drawline(self,p,stl):
+        """
+        Appends a path tag to the blr string, for straight lines
+
+        :param p: list of cartesian coordinates
+        :param stl: name of the object in the style tag
+        """
+        s='<path class="'+stl+'" d="M '+str(p[0][0])+','+str(p[0][1])+' L '
+        
+        for point in p[1:]:
+            s+=str(point[0])+','+str(point[1])+' '
+            
+        s=s[:-1]+'" />\n'
+        self.paths+=s
+    
+    def drawcubicbezier(self,ctrlPoints,stl,closed=True):
+        """
+        Appends a path tag to the blr string, for closed cubic bezier curves
+
+        :param c: control points for cubic bezier curve
+        :param stl: name of the object in the style tag
+        """
+
+        # check conformity with SVG standard
+        if ( (len(ctrlPoints)-1) % 3 != 0):
+            raise ValueError(f"Cannot create bezier curve. ${(len(ctrlPoints)-1) % 3}")
+
+        groupsForCurveto = list(map( lambda i: ctrlPoints[1+i*3:1+(i+1)*3],range(3)))
+
+        s='<path class="'+stl+'" d="M '+str(ctrlPoints[0][0])+','+str(ctrlPoints[0][1])
+
+
+        
+        for points in groupsForCurveto[1:]:
+            s+=' C '
+            for i in range(3):
+                s+=str(points[i][0])+','+str(points[i][1])+' '
+        
+        if (closed == True):
+            s=s[:-1]+' z" />\n'
+        else:
+            s=s[:-1]+'" />\n'
+        self.paths+=s
+        
+    
+    
+
+
+
 
 def saveIndCon(controlPoints, con, styleguide = None, padding = 10):
     """
@@ -244,14 +265,15 @@ def saveIndCon(controlPoints, con, styleguide = None, padding = 10):
     controlPoints[:,1] = controlPoints[:,1] - minY + padding
 
     # write svg file
-    blr = ''
-    blr = svgfileinit(img_size)
-    blr = svgaddstyletag(blr,styleguide)
+    blr = SVGHandler()
+    blr.initialize(img_size)
+    blr.addstyletag(styleguide)
     
-    blr = svgdrawline(blr,con,"thick-line")
-    blr = svgdrawcubicbezier(blr,controlPoints,"thin-line")
-    blr = svgfileclose(blr)
-    return blr
+    blr.drawline(con,"thick-line")
+    blr.drawcubicbezier(controlPoints,"thin-line")
+    blr.compose()
+    blr.save()
+    return blr.file
 
 def saveConsVectorized(controlPoints):
     """
@@ -266,12 +288,12 @@ def saveConsVectorized(controlPoints):
     pass
 
 if(__name__=='__main__'):
-    x = np.random.random(9)
-    y = np.random.random(9)
+    x = np.random.random(10)
+    y = np.random.random(10)
     p=np.column_stack([x,y])
 
     stl = {"pa":{},"po":{}}
-    svgsave(saveIndCon(p,p))
 
+    saveIndCon(p,p)
 
     print("Hi`")

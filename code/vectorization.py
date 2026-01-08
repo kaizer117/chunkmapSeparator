@@ -136,7 +136,7 @@ def getPreciseCrossings(values: np.ndarray,
 
     return precise_crossings
 
-def polygonSegmentation(data, chunk_size=30):
+def polygonSegmentation(data, chunk_size=10):
     """
     Blind segmentation
     Curvature aware segmentation
@@ -144,8 +144,11 @@ def polygonSegmentation(data, chunk_size=30):
 
     # 1. Implemeting blind segmentation
     n_points = len(data)
-    if (n_points <= 2*chunk_size):
-        raise ValueError("Chunk size too large. Reduce chunk size")
+    while (n_points <= 2*chunk_size):
+        chunk_size = int(chunk_size/1.5)
+    if (chunk_size <= 4):
+        print(f'{chunk_size} is too small to segment the polygon of length {n_points}\n')
+        return [data]
     
     # readjusting the chunk size
     chunks = n_points//chunk_size+1
@@ -165,8 +168,9 @@ def fitBezierCurve(data: np.ndarray, use_cache: bool = True) -> np.ndarray:
     This algorithm is a direct MATLAB-to-Python translation of Tim. A, Pastva's algorithm.
     Source: https://calhoun.nps.edu/entities/publication/8126011c-a7ec-4cad-8372-4c971bf915a9
     
-    Certain cacheing and early termination techniques are used to improve the original speed by
-    20-30%
+    Certain cacheing and early termination techniques are used to improve the original speed
+    by 20-30%. Further imporovments can be made alongside more optimizations for cubic
+    bezier approximation.
 
     This algorithm provides higher order bezier curves whereas SVG files only support up to 
     cubic bezeier curves (degree = 3)
@@ -284,7 +288,7 @@ def fitBezierCurve(data: np.ndarray, use_cache: bool = True) -> np.ndarray:
             if n > 2:
                 h[n-2] = t[n-2] * (1 + (1.5 * theta[n-2] * t[n-3]) / (t[n-3] + t[n-2]))
         
-        h_cum = np.cumsum(np.insert(h, 0, 0))
+        h_cum = np.cumsum(np.insert(h, 0, 0)) # Does this have any meaningful impact ?
         return h_cum / h_cum[-1]
     
     def select_degree_fixed(n_points: int) -> int:
@@ -326,7 +330,7 @@ def fitBezierCurve(data: np.ndarray, use_cache: bool = True) -> np.ndarray:
     
     # degree =select_degree_fixed(n_points)
 
-    degree = 3
+    degree = 3 # essentially clamp the function to do cubic bezier approximation for now.
     
     # Initialize nodes
     nodes = affine_invariant_nodes(data)
@@ -360,10 +364,31 @@ def fitBezierCurve(data: np.ndarray, use_cache: bool = True) -> np.ndarray:
         
         prev_residual_norm = residual_norm
     
-    return control_points, nodes, degree
+    return control_points
 
-def vectorizeContour():
-    pass
+def vectorizeContour(data):
+    """
+    Creates a list of lists for cubic bezeir control points for each segment of
+    one contour
+    
+    :param data: raster data, 2d coordinates of the contour
+    """
+    # Segment polygon data
+    segmentedData = polygonSegmentation(data)
+
+    # Use map function to fit cubic bezier curve
+    ctrlCon = list(map(fitBezierCurve,segmentedData))
+
+    return np.array(ctrlCon)
+
+def reshapeCtrlSVG(ctrlCon):
+    """
+    SVG cubic bezier curves accept control points in a very weird way. This function acts
+    as a bridge between the output of vectorizeContour and other svg methods
+
+    Most probably will be deprciated when the fitbeziercruves get revamed
+    """
+    return np.concat([ctrlCon[0],np.concat(ctrlCon[1:,1:])])
 
 def vectorizeContours():
     pass
