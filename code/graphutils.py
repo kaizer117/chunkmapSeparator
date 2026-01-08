@@ -665,7 +665,7 @@ class HistogramPlotter():
         
         return bin_centers, counts, percentages
 
-def plot_curvature_with_histogram(coords, values, bin_width=1, 
+def plotcurvaturewithhistogram(coords, values, bin_width=1, 
                                   cmap='viridis', linewidth=2, alpha=1.0, 
                                   closed=True, hist_color='skyblue'):
     """

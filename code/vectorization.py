@@ -68,7 +68,7 @@ def sampleT(datapoints,method='square_root_distance'):
 
 
 
-def computecurvature(data):
+def computCurvature(data):
     """
     This function calculates the curvature of a plane curve.
     Source: https://en.wikipedia.org/wiki/Curvature#Plane_curves
@@ -103,7 +103,7 @@ def computecurvature(data):
 
     return curvature, stats
 
-def getprecisecrossings(values: np.ndarray, 
+def getPreciseCrossings(values: np.ndarray, 
                          threshold: float) -> List[float]:
     """
     Get more precise crossing positions using linear interpolation.
@@ -129,25 +129,52 @@ def getprecisecrossings(values: np.ndarray,
         
         # Check for falling crossing
     
-        if v_prev > threshold >= v_curr:
-            # Linear interpolation
-            precise_idx = (i-1)
-            precise_crossings.append(precise_idx)
+        # if v_prev > threshold >= v_curr:
+        #     # Linear interpolation
+        #     precise_idx = (i-1)
+        #     precise_crossings.append(precise_idx)
 
     return precise_crossings
 
+def polygonSegmentation(data, chunk_size=30):
+    """
+    Blind segmentation
+    Curvature aware segmentation
+    """
 
+    # 1. Implemeting blind segmentation
+    n_points = len(data)
+    if (n_points <= 2*chunk_size):
+        raise ValueError("Chunk size too large. Reduce chunk size")
+    
+    # readjusting the chunk size
+    chunks = n_points//chunk_size+1
+    chunk_size = n_points // chunks
 
-def fitbeziercurve(data: np.ndarray, min_degree: int = 3, max_degree: int = 7, use_cache: bool = True) -> np.ndarray:
+    # populating indexes and pushing the remainders to the final chunk
+    indexes = list(map(lambda i:i*chunk_size,range(chunks)))
+    indexes.append(n_points-1)
+
+    # using map object to splice the data array
+
+    return list(map(lambda i: data[indexes[i]:indexes[i+1]],range(len(indexes)-1)))
+
+def fitBezierCurve(data: np.ndarray, use_cache: bool = True) -> np.ndarray:
     """
     Fit a Bézier curve to 2D data using Total Least Squares with Gauss-Newton optimization.
+    This algorithm is a direct MATLAB-to-Python translation of Tim. A, Pastva's algorithm.
+    Source: https://calhoun.nps.edu/entities/publication/8126011c-a7ec-4cad-8372-4c971bf915a9
+    
+    Certain cacheing and early termination techniques are used to improve the original speed by
+    20-30%
+
+    This algorithm provides higher order bezier curves whereas SVG files only support up to 
+    cubic bezeier curves (degree = 3)
     
     Parameters:
     -----------
     data : np.ndarray
         (n, 2) array of 2D points
-    degree : int, optional
-        Degree of Bézier curve. If None, degree = min(7, max(2, n_points//4))
     use_cache : bool
         Whether to cache Bernstein matrices for speed
     
@@ -264,6 +291,9 @@ def fitbeziercurve(data: np.ndarray, min_degree: int = 3, max_degree: int = 7, u
         """
         Select degree based on fixed heuristic.
         """
+        min_degree = n_points//10
+        max_degree = n_points//5
+        
         # Heuristic 1: Based on square root of points
         degree_sqrt = int(np.round(np.sqrt(n_points)))
         
@@ -285,12 +315,18 @@ def fitbeziercurve(data: np.ndarray, min_degree: int = 3, max_degree: int = 7, u
     
     n_points = len(data)
     
-    # Determine degree if not provided
-    # if degree is None:
-    #     degree = min(7, max(2, n_points // 4))
-    # degree = min(degree, n_points - 1)
+    # # Determine degree if not provided
+    # # if degree is None:
+    # #     degree = min(7, max(2, n_points // 4))
+    # # degree = min(degree, n_points - 1)
+
+    # # define min and max degrees based on the maximum percision point to degree scale
+    # min_degree = n_points//10
+    # max_degree = n_points//5
     
-    degree =select_degree_fixed(n_points)
+    # degree =select_degree_fixed(n_points)
+
+    degree = 3
     
     # Initialize nodes
     nodes = affine_invariant_nodes(data)
@@ -326,20 +362,16 @@ def fitbeziercurve(data: np.ndarray, min_degree: int = 3, max_degree: int = 7, u
     
     return control_points, nodes, degree
 
+def vectorizeContour():
+    pass
+
+def vectorizeContours():
+    pass
+
 if (__name__=="__main__"):
     
-    
-    styleguide={'Datapoint':{'fill':'#b0303c','fill-opacity':'1','stroke':'none',
-                            'stroke-width':'none','stroke-linejoin':'round','stroke-dasharray':'none','stroke-opacity':'1'},
-                'Connectlinedash':{'opacity':'1','fill':'none','fill-opacity':'1','stroke':'#9e9e9e','stroke-width':'1',
-                               'stroke-linejoin':'round','stroke-dasharray':'1.20000005,0.30000001','stroke-opacity':'1','stroke-dashoffset':'0'},
-                'Controlpoint':{'fill':'#b0303c','fill-opacity':'1','stroke':'none','stroke-width':'none',
-                                'stroke-linejoin':'round','stroke-dasharray':'none','stroke-opacity':'1'},
-                'Handles':{'opacity':'1','fill':'none','fill-opacity':'1','stroke':'#9e9e9e','stroke-width':'1',
-                           'stroke-linejoin':'round','stroke-dasharray':'none','stroke-opacity':'1'},
-                'Curve':{'opacity':'1','fill':'none','fill-opacity':'1','stroke':'#000000','stroke-width':'1',
-                           'stroke-linejoin':'round','stroke-dasharray':'none','stroke-opacity':'1'}
-                }
+    x = np.random.random(int(np.floor(np.random.random()*100)+30))
+    polygonSegmentation(x)
     
     
     
