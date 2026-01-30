@@ -17,6 +17,11 @@ Chunk Map Seprator is a convenient piece of software that can help with creating
 I suggest you clone this repository and use Visual Studio Code as your IDE. Once successfullly cloned, create an empty <code>outputs</code> folder in your repository. 
 </p>
 
+<h2>Files</h2>
+<p>
+
+</p>
+
 <h2>Workflow</h2>
 
 <p>

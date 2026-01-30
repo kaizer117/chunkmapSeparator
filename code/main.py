@@ -10,6 +10,7 @@ import programutils as putils
 import graphutils as gutils
 import fileutils as futils
 import colorspace as colutils
+import vectorization as vect
 
 # load input image
 
@@ -23,11 +24,25 @@ opac,hist=cutils.histimg(img)
 ret,thresh1 = cv.threshold(opac,252,255,cv.THRESH_BINARY)
 
 
-
+# doing the computer vision contours
 contours, hierarchy = cv.findContours(thresh1, cv.RETR_CCOMP, cv.CHAIN_APPROX_NONE)
 
+#reshaping the contours array for ease
+contours = cutils.contoursRehsaper(contours)
 
-cons1=cutils.cons(contours,hierarchy)
+# compute and display the curvature of contours and a histogram of the curvature
+i = 13
+curv, stats = vect.computCurvature(contours[i])
+# fig,ax,stats = gutils.plotcurvaturewithhistogram(contours[i],curv,((max(curv)-min(curv))/100))
+print(f"n={stats['n']} mean={stats['mean']:.3f} median={stats['median']:.3f} std={stats['std']:.3f} range=[{stats['min']:.3f},{stats['max']:.3f}]")
+
+#segmentation based on stats (skipping for now)
+
+# bezier curve fitting and visualization
+controlPoints = vect.vectorizeContour(contours[i])
+reshapedCtrl = vect.reshapeCtrlSVG(controlPoints)
+futils.saveIndCon(reshapedCtrl,contours[i])
+
 
 
 
@@ -36,10 +51,10 @@ cons1=cutils.cons(contours,hierarchy)
 
 
 # contour to svg
-cmap=colutils.cmapHex(12,len(contours),'random','shuffle')
+#cmap=colutils.cmapHex(12,len(contours),'random','shuffle')
 
-img_size=np.shape(img)
-futils.saveCons(img_size,contours,cmap,'outputs','cuba_ex')
+#img_size=np.shape(img)
+# futils.saveCons(img_size,contours,cmap,'outputs','cuba_ex')
 
 
 
