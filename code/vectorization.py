@@ -3,6 +3,11 @@ import fileutils as f
 from scipy.linalg import lstsq
 from scipy.special import comb
 from typing import List
+import segmentation as seg
+import copy
+
+#for testing polygon segmentation
+import colorspace as c
 
 def generateDatapoints(n_points: int = 20, noise_std: float = 0.05, 
                          curve_type: str = 'sigmoid') -> np.ndarray:
@@ -393,15 +398,166 @@ def reshapeCtrlSVG(ctrlCon):
 def vectorizeContours():
     pass
 
+def get_xy_extent(data, padding=0, padding_type='absolute',output='height-width'):
+    """
+    Get (x_extent, y_extent) of 2D coordinate data with optional padding.
+    
+    Parameters:
+    -----------
+    data : array-like of shape (n_points, 2)
+        Input coordinate data
+    padding : float or tuple, default=0
+        - float: same padding for both axes
+        - tuple: (padding_x, padding_y)
+    padding_type : str, default='absolute'
+        'absolute', 'relative' (fraction of extent), or 'percentage'
+    output : str, default='height-width'
+        height-width: only gives out the weight and width px values
+        viewbox: gives 4 values corresponding to the bounding box
+        minmaxex: gives 6 values corresponding to minx, miny, maxx, maxy, extentx, extenty
+    
+    Returns:
+    --------
+    tuple : (x_0, y_0, x_extent, y_extent)
+    """
+    # Convert to numpy array
+    data = np.asarray(data)
+    
+    # Handle 1D flattened array
+    if data.ndim == 1:
+        data = data.reshape(-1, 2)
+    
+    # Get raw extents
+    min_vals = np.min(data, axis=0)
+    max_vals = np.max(data, axis=0)
+    extents = max_vals - min_vals
+    
+    # Handle zero extents
+    extents[extents == 0] = 1
+    
+    # Apply padding
+    if padding != 0:
+        if isinstance(padding, (int, float)):
+            pad_x = pad_y = padding
+        else:
+            pad_x, pad_y = padding
+        
+        if padding_type == 'relative':
+            pad_x *= extents[0]
+            pad_y *= extents[1]
+        elif padding_type == 'percentage':
+            pad_x = (pad_x / 100) * extents[0]
+            pad_y = (pad_y / 100) * extents[1]
+        
+        extents[0] += 2 * pad_x
+        extents[1] += 2 * pad_y
+    if (output=="height-width"):
+        return (max_vals[0], max_vals[1])
+    elif (output=="viewbox"):# poorly implemented, pls fix, may even depricate at some point
+        return (extents[0], extents[1],min_vals[0], min_vals[1])
+    elif (output=="minmaxex"):
+        return (min_vals[0],min_vals[1],max_vals[0], max_vals[1],extents[0], extents[1])
+
+def controlPointFormatter(ctrlPoints):
+    """
+    another variation of reshapeCtrlSVG, this one will, calculate end/start points for subsequent
+    curves as well as reshaping the ctrlPoint array such that the array will have the following
+    format:
+
+    [4 points],[3 points],[3 points]
+
+    Parameters:
+    --------
+    ctrlPoints : nd.array or list
+    
+    Returns:
+    --------
+    list: As specified above
+    """
+    # deepcopy the ctrl points
+    ctrlPointCopy = copy.deepcopy(ctrlPoints)
+    # create and calculate the mid-points
+    def calcMidPoint (p1,p2):
+        return np.array([(p1[0]+p2[0])/2,(p1[1]+p2[1])/2])
+    try:
+        endPoints = list(map(lambda i: calcMidPoint(ctrlPointCopy[i][3],ctrlPointCopy[i+1][0]),range(len(ctrlPointCopy)-1)))
+    except IndexError as e:
+        raise e
+    
+    # assign calculated midpoints to the end of every ctrpoint array
+    for i in range(len(ctrlPointCopy)-1):
+        ctrlPointCopy[i][3]=endPoints[i]
+    
+    for i in range(1,len(ctrlPointCopy)):
+        ctrlPointCopy[i]=ctrlPointCopy[i][1:]
+
+    return ctrlPointCopy
+
+def visualizeSegmentation(data,stroke_width = 1):
+    """
+    Take the segmented array and output a svg file visualising the segments. Purely for
+    testing purposes.
+    
+    Parameters:
+    -----------
+    segments : array of arrays containing the segmented data
+    
+    Returns:
+    --------
+    None
+    """
+    svgHandler = f.SVGHandler()
+
+    shapeTuple = get_xy_extent(data,output="minmaxex")
+
+    data[:,0]=data[:,0]-shapeTuple[0]
+    data[:,1]=data[:,1]-shapeTuple[1]
+
+    svgHandler.initialize(img_size=(shapeTuple[4],shapeTuple[5]))
+
+    segments = seg.polygon_curvature_segmentation(data,min_chunk=10,max_chunk=30,smooth_sigma=2)
+
+    ctrlCon = list(map(fitBezierCurve,segments))
+
+    #prepare the data set and ctrl points for svg output
+    def link_arrays(arrays):
+        # inefficient as heck
+        len_arrays = len(arrays)
+        return np.array(list(map(lambda i:np.concatenate((arrays[i%len_arrays],arrays[(i+1)%len_arrays][0].reshape(1,2))),range(len_arrays))),dtype=object)
+    
+    ctrlCon = controlPointFormatter(ctrlCon)
+    segments = link_arrays(segments)
+
+    colors = c.getRandColours(len(segments))
+    baseStyle = {
+                        "stroke":None,
+                        "stroke-width": str(stroke_width),
+                        "fill": "none"
+                        }
+    
+    
+    
+    styleGuideDict = {"bezierStyle":{
+                        "stroke":"#e08776",
+                        "stroke-width": str(stroke_width*0.8),
+                        "stroke-dasharray":"3 2",
+                        "stroke-opacity":"0.7",
+                        "fill": "none"
+                        }}
+
+    for i in range (len(segments)):
+        baseStyle["stroke"]=colors[i]
+        styleGuideDict['thin-line-'+str(i)]=baseStyle.copy()
+        svgHandler.drawline(segments[i],'thin-line-'+str(i))
+        #svgHandler.drawCubicBezierSingular(ctrlCon[i]," bezierStyle")
+    svgHandler.drawcubicbezier(ctrlCon," bezierStyle")
+    svgHandler.addstyletag(styleGuideDict)
+    svgHandler.compose()
+    svgHandler.save()
+
+    return None
+
 if (__name__=="__main__"):
-    
-    x = np.random.random(int(np.floor(np.random.random()*100)+30))
-    polygonSegmentation(x)
-    
-    
-    
-    
-    
-    
-    
+    data = generateDatapoints(100,curve_type="circle")*100+5
+    segments = polygonSegmentation(data,9)
     print('Hi')
