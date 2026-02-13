@@ -11,6 +11,7 @@ import graphutils as gutils
 import fileutils as futils
 import colorspace as colutils
 import vectorization as vect
+import segmentation as seg
 
 # load input image
 
@@ -31,33 +32,34 @@ contours, hierarchy = cv.findContours(thresh1, cv.RETR_CCOMP, cv.CHAIN_APPROX_NO
 contours = cutils.contoursRehsaper(contours)
 
 # compute and display the curvature of contours and a histogram of the curvature
-i = 13
-curv, stats = vect.computCurvature(contours[i])
-# fig,ax,stats = gutils.plotcurvaturewithhistogram(contours[i],curv,((max(curv)-min(curv))/100))
-print(f"n={stats['n']} mean={stats['mean']:.3f} median={stats['median']:.3f} std={stats['std']:.3f} range=[{stats['min']:.3f},{stats['max']:.3f}]")
+i = 40
+# curv, stats = vect.computCurvature(contours[i])
+# # fig,ax,stats = gutils.plotcurvaturewithhistogram(contours[i],curv,((max(curv)-min(curv))/100))
+# print(f"n={stats['n']} mean={stats['mean']:.3f} median={stats['median']:.3f} std={stats['std']:.3f} range=[{stats['min']:.3f},{stats['max']:.3f}]")
 
-#segmentation based on stats (skipping for now)
+# shifting and reshaping the shape for visualization
+shapeTuple = vect.get_xy_extent(contours[i],output="minmaxex")
+
+data = contours[i]
+
+#segmentation 
+# segments = vect.polygonSegmentation(contours[i])
+vect.visualizeSegmentation(data)
 
 # bezier curve fitting and visualization
-controlPoints = vect.vectorizeContour(contours[i])
-reshapedCtrl = vect.reshapeCtrlSVG(controlPoints)
-futils.saveIndCon(reshapedCtrl,contours[i])
-
-
-
+# controlPoints = vect.vectorizeContour(contours[i])
+# ctrlCon = list(map(vect.fitBezierCurve,segments))
+# reshapedCtrl = vect.reshapeCtrlSVG(controlPoints)
+# futils.saveIndCon(reshapedCtrl,contours[i])
 
 #plt=gutils.plotconsHierarchy(cons1,cm.spring,'Feature visualizaton')
 #plt.show()
-
 
 # contour to svg
 #cmap=colutils.cmapHex(12,len(contours),'random','shuffle')
 
 #img_size=np.shape(img)
 # futils.saveCons(img_size,contours,cmap,'outputs','cuba_ex')
-
-
-
 
 print('end')
 

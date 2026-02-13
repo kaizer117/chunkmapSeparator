@@ -124,6 +124,10 @@ def cmapHex(h,n,sampling='linear',picking='linear'):
 def lightnessIndex(d):
     pass
 
+def getRandColours(n):
+    
+    return list(map(rgb2hex,np.random.random((n,3))))
+
 class cmapIter():
     def __init(self,h,sampling,picking):
         self.hue=h
@@ -131,10 +135,7 @@ class cmapIter():
         self.pck=picking
         self.hvar=4
     
-    
-
-if (__name__=="__main__"):
-    
+def testCase1():
     save_path=futils.createFolder('outputs')
     n=143
     n+=1
@@ -168,4 +169,8 @@ if (__name__=="__main__"):
         
         f.write(s)
         f.close()
+
+if (__name__=="__main__"):
+    
+    l = getRandColours(5)
     print('Hi')

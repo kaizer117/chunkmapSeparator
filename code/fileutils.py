@@ -119,14 +119,19 @@ class SVGHandler():
         This function will generate the boiler plate stuff of the svg
 
         :param img_size: (X,Y) size a tuple or a list of 2 pairs of values usually in px values
+        :param img_size: (X0,Y0,X,Y) dimensions tuple.
         '''
         s=''
         s+='<?xml version="1.0" standalone="no"?>\n'
 
-
-        s+='<svg width="'+str(img_size[1])+'px"'
-        s+=' height="'+str(img_size[0])+'px"'
-        s+=' viewbox="'+'0'+' '+'0'+' '+str(img_size[1])+' '+str(img_size[0])+'"'
+        if (len(img_size)==2):
+            s+='<svg width="'+str(img_size[0])+'px"'
+            s+=' height="'+str(img_size[1])+'px"'
+            #s+=' viewbox="'+'0'+' '+'0'+' '+str(img_size[1])+' '+str(img_size[0])+'"'
+        elif (len(img_size)==4): #for viewbox settings (incomplete implementation)
+            s+='<svg width="'+str(img_size[3])+'px"'
+            s+=' height="'+str(img_size[2])+'px"'
+            #s+=' viewbox="'+str(img_size[1])+' '+str(img_size[0])+' '+str(img_size[3])+' '+str(img_size[2])+'"'
 
         s+=' xmlns="http://www.w3.org/2000/svg" version="1.1">\n'
         self.header=s
@@ -193,36 +198,46 @@ class SVGHandler():
         """
         Appends a path tag to the blr string, for closed cubic bezier curves
 
-        :param c: control points for cubic bezier curve
+        :param ctrlPoints: control points for cubic bezier curve
+                            - it is assumed that the ctrPoints have gone
+                            through a formatting process similar to 
+                            vectorization.controlPointFormatter
+                            - need [ [4 points] , [3 points] , [3 points]]
         :param stl: name of the object in the style tag
         """
 
-        # check conformity with SVG standard
-        if ( (len(ctrlPoints)-1) % 3 != 0):
-            raise ValueError(f"Cannot create bezier curve. ${(len(ctrlPoints)-1) % 3}")
+        startPoint = ctrlPoints[0]
 
-        groupsForCurveto = list(map( lambda i: ctrlPoints[1+i*3:1+(i+1)*3],range(3)))
+        s='<path class="'+stl+'" d="M '+str(startPoint[0][0])+','+str(startPoint[0][1])+' C '+\
+            str(startPoint[1][0])+','+str(startPoint[1][1])+' '+str(startPoint[2][0])+','+str(startPoint[2][1])+' '+\
+            str(startPoint[3][0])+','+str(startPoint[3][1])
 
-        s='<path class="'+stl+'" d="M '+str(ctrlPoints[0][0])+','+str(ctrlPoints[0][1])
-
-
-        
-        for points in groupsForCurveto[1:]:
+        for followingPoints in ctrlPoints[1:]:
             s+=' C '
             for i in range(3):
-                s+=str(points[i][0])+','+str(points[i][1])+' '
+                s+=str(followingPoints[i][0])+','+str(followingPoints[i][1])+' '
         
         if (closed == True):
             s=s[:-1]+' z" />\n'
         else:
             s=s[:-1]+'" />\n'
+        
         self.paths+=s
         
     
     
+    def drawCubicBezierSingular(self,ctrlPoints,stl):
+        """
+        Temperoary function to test stuff
 
+        :param ctrlPoints: (4,2) shape
+        """
 
-
+        s='<path class="'+stl+'" d="M '+str(ctrlPoints[0][0])+','+str(ctrlPoints[0][1])+' C '+\
+            str(ctrlPoints[1][0])+','+str(ctrlPoints[1][1])+' '+str(ctrlPoints[2][0])+','+str(ctrlPoints[2][1])+' '+\
+            str(ctrlPoints[3][0])+','+str(ctrlPoints[3][1])+'" />\n'
+        
+        self.paths+=s
 
 def saveIndCon(controlPoints, con, styleguide = None, padding = 10):
     """
