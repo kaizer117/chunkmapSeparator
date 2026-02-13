@@ -515,7 +515,7 @@ def visualizeSegmentation(data,stroke_width = 1):
 
     svgHandler.initialize(img_size=(shapeTuple[4],shapeTuple[5]))
 
-    segments = seg.polygon_curvature_segmentation(data,min_chunk=10,max_chunk=30,smooth_sigma=2)
+    segments = seg.polygon_curvature_segmentation(data,min_chunk=5,max_chunk=15,smooth_sigma=2)
 
     ctrlCon = list(map(fitBezierCurve,segments))
 

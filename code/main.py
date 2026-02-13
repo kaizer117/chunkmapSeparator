@@ -31,14 +31,15 @@ contours, hierarchy = cv.findContours(thresh1, cv.RETR_CCOMP, cv.CHAIN_APPROX_NO
 #reshaping the contours array for ease
 contours = cutils.contoursRehsaper(contours)
 
+
 # compute and display the curvature of contours and a histogram of the curvature
-i = 40
+i = 45
 # curv, stats = vect.computCurvature(contours[i])
 # # fig,ax,stats = gutils.plotcurvaturewithhistogram(contours[i],curv,((max(curv)-min(curv))/100))
 # print(f"n={stats['n']} mean={stats['mean']:.3f} median={stats['median']:.3f} std={stats['std']:.3f} range=[{stats['min']:.3f},{stats['max']:.3f}]")
 
 # shifting and reshaping the shape for visualization
-shapeTuple = vect.get_xy_extent(contours[i],output="minmaxex")
+# shapeTuple = vect.get_xy_extent(contours[i],output="minmaxex")
 
 data = contours[i]
 
