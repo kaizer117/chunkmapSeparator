@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+        #canvas-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #imageCanvas {
+            max-width: 100%;
+            max-height: 100%;
+            border: 1px solid #ccc;
+            background-color: white;
+        }
+        #svgOverlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        #svgOverlay svg {
+            pointer-events: all;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container">
+        <!-- Hidden file input for image upload -->
+        <input type="file" id="imageInput" accept="image/jpeg,image/png" class="hidden">
+        
+        <!-- Canvas for displaying the image -->
+        <img id="imageCanvas" alt="Canvas Image">
+        
+        <!-- SVG Overlay container -->
+        <div id="svgOverlay"></div>
+    </div>
+    
+    <script src="canvas.js"></script>
+</body>
+</html>

@@ -448,9 +448,7 @@ def get_xy_extent(data, padding=0, padding_type='absolute',output='height-width'
         elif padding_type == 'percentage':
             pad_x = (pad_x / 100) * extents[0]
             pad_y = (pad_y / 100) * extents[1]
-        
-        extents[0] += 2 * pad_x
-        extents[1] += 2 * pad_y
+        # please implement padding in a more meaningful
     if (output=="height-width"):
         return (max_vals[0], max_vals[1])
     elif (output=="viewbox"):# poorly implemented, pls fix, may even depricate at some point
@@ -510,6 +508,7 @@ def visualizeSegmentation(data,stroke_width = 1):
 
     shapeTuple = get_xy_extent(data,output="minmaxex")
 
+    # shift the shape to the origin
     data[:,0]=data[:,0]-shapeTuple[0]
     data[:,1]=data[:,1]-shapeTuple[1]
 
@@ -517,6 +516,7 @@ def visualizeSegmentation(data,stroke_width = 1):
 
     segments = seg.polygon_curvature_segmentation(data,min_chunk=5,max_chunk=15,smooth_sigma=2)
 
+    #actual vecotirzation
     ctrlCon = list(map(fitBezierCurve,segments))
 
     #prepare the data set and ctrl points for svg output

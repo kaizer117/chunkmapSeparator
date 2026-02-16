@@ -10,6 +10,17 @@
 <p>
 Chunk Map Seprator is a convenient piece of software that can help with creating high-quality maps with beautiful procedurely generated color palattes. Primarily written in python, this software allows you to beautify your maps, create visually striking details and customize color palattes to your hearts content.<br><b>Note: This project is still WIP with many fetaures yet to come</b> </p>
 
+<h2>Acknowledgements</h2>
+<p>
+
+- Vectorization algorithm: Heavily inspired by Dr. Tim A. Pastva's thesis "<a href = "https://calhoun.nps.edu/entities/publication/8126011c-a7ec-4cad-8372-4c971bf915a9">Bezier Curve Fitting</a>". <b>I have introduced some optimizations for his algorithms, for faster vectorization.</b>
+    - Such as cachehing bernstein matrices to save compute on recalculating bernstien matrices each iteration.
+    - And early termination techniques for results that achieve a certain level of tolerance.
+- Curvature aware adaptive polygon segmentation: A multiple sources were used
+    - Wikipedia's equations for <a href="https://en.wikipedia.org/wiki/Curvature#Plane_curves">planar curvature</a> were used to calculate the curvature of a raster curve in 2D plane.
+    - The mulit-scalar curvature based segmentation was implemented from F. Mokhtarin's paper "<a href="https://ieeexplore.ieee.org/document/149591">A theory of multiscale, curvature-based shape representation for planar curves</a>".
+</p>
+
 
 
 <h2>Setup</h2>
