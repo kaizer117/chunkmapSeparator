@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1100" viewBox="0 0 1200 1100" role="img" aria-labelledby="title desc">
+  <title id="title">Recommended random island outline pipeline</title>
+  <desc id="desc">A ten step pipeline: parameters and seed, base silhouette, signed distance field, coastal noise, displaced field, sea level and edge safety, binary mask and cleanup, contour extraction, simplify and smooth, output.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4a5a5a"/>
+    </marker>
+    <filter id="soft" x="-5%" y="-10%" width="110%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#1f2d2d" flood-opacity="0.10"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="1100" fill="#f7f6f1"/>
+
+  <text x="40" y="52" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="700" fill="#1f2d2d">Random island outlines — recommended pipeline</text>
+  <text x="40" y="80" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#5f6b6b">Research only. Shape first, then fractal detail, then vectorise the coastline.</text>
+
+  <!-- right design rules card -->
+  <g filter="url(#soft)">
+    <rect x="880" y="110" width="280" height="300" rx="14" fill="#ffffff" stroke="#d8d4c8"/>
+  </g>
+  <text x="904" y="142" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="1.2" fill="#7a6a4f">DESIGN RULES</text>
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#334141">
+    <text x="904" y="174">1. Shape first, detail second.</text>
+    <text x="904" y="202">2. Break the circle with lobes</text>
+    <text x="918" y="220">and domain warp.</text>
+    <text x="904" y="248">3. Band fine detail to the coast.</text>
+    <text x="904" y="276">4. Solve area; don't guess the</text>
+    <text x="918" y="294">sea level.</text>
+    <text x="904" y="322">5. Smooth the contour, not</text>
+    <text x="918" y="340">the field.</text>
+    <text x="904" y="368">6. Validate margin + topology.</text>
+  </g>
+
+  <!-- step boxes -->
+  <!-- 1 -->
+  <g filter="url(#soft)">
+    <rect x="390" y="110" width="420" height="74" rx="12" fill="#fdf3d8" stroke="#d9c48f"/>
+  </g>
+  <text x="412" y="130" font-family="Segoe UI, Arial, sans-serif" font-size="10" letter-spacing="1.4" fill="#8a7444">STEP 1</text>
+  <text x="412" y="154" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#2b2a24">Parameters + seed</text>
+  <text x="412" y="172" font-family="Segoe UI, Arial, sans-serif" font-size="11.5" fill="#6f644c">width · height · coverage · aspect · roughness</text>
+
+  <!-- 2 -->
+  <g filter="url(#soft)">
+    <rect x="390" y="204" width="420" height="74" rx="12" fill="#dcebf2" stroke="#a9c4d2"/>
+  </g>
+  <text x="412" y="224" font-family="Segoe UI, Arial, sans-serif" font-size="10" letter-spacing="1.4" fill="#4f7485">STEP 2</text>
+  <text x="412" y="248" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#22343a">Base silhouette</text>
+  <text x="412" y="266" font-family="Segoe UI, Arial, sans-serif" font-size="11.5" fill="#52707a">rotated ellipse + lobes / metaball union</text>
+
+  <!-- 3 -->
+  <g filter="url(#soft)">
+    <rect x="390" y="298" width="420" height="74" rx="12" fill="#dcebf2" stroke="#a9c4d2"/>
+  </g>
+  <text x="412" y="318" font-family="Segoe UI, Arial, sans-serif" font-size="10" letter-spacing="1.4" fill="#4f7485">STEP 3</text>
+  <text x="412" y="342" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#22343a">Signed distance field φ</text>
+  <text x="412" y="360" font-family="Segoe UI, Arial, sans-serif" font-size="11.5" fill="#52707a">distance transform · positive inside</text>
+
+  <!-- 4 -->
+  <g filter="url(#soft)">
+    <rect x="390" y="392" width="420" height="74" rx="12" fill="#e2f0e0" stroke="#aecbaa"/>
+  </g>
+  <text x="412" y="412" font-family="Segoe UI, Arial, sans-serif" font-size="10" letter-spacing="1.4" fill="#567a52">STEP 4</text>
+  <text x="412" y="436" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#263a24">Coastal noise</text>
+  <text x="412" y="454" font-family="Segoe UI, Arial, sans-serif" font-size="11.5" fill="#5b7558">fBm + domain warp · H ≈ 0.74 · gain ≈ 0.60</text>
+
+  <!-- 5 -->
+  <g filter="url(#soft)">
+    <rect x="390" y="486" width="420" height="74" rx="12" fill="#e2f0e0" stroke="#aecbaa"/>
+  </g>
+  <text x="412" y="506" font-family="Segoe UI, Arial, sans-serif" font-size="10" letter-spacing="1.4" fill="#567a52">STEP 5</text>
+  <text x="412" y="530" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#263a24">Displace the field</text>
+  <text x="412" y="548" font-family="Segoe UI, Arial, sans-serif" font-size="11.5" fill="#5b7558">F = φ + A · N   →   coast is F = t</text>
+
+  <!-- 6 -->
+  <g filter="url(#soft)">
+    <rect x="390" y="580" width="420" height="74" rx="12" fill="#f3e2ef" stroke="#d0aec6"/>
+  </g>
+  <text x="412" y="600" font-family="Segoe UI, Arial, sans-serif" font-size="10" letter-spacing="1.4" fill="#855d79">STEP 6</text>
+  <text x="412" y="624" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#3a2633">Sea level + edge safety</text>
+  <text x="412" y="642" font-family="Segoe UI, Arial, sans-serif" font-size="11.5" fill="#7a5b70">solve t for target coverage · soft margin penalty</text>
+
+  <!-- 7 -->
+  <g filter="url(#soft)">
+    <rect x="390" y="674" width="420" height="74" rx="12" fill="#f3e2ef" stroke="#d0aec6"/>
+  </g>
+  <text x="412" y="694" font-family="Segoe UI, Arial, sans-serif" font-size="10" letter-spacing="1.4" fill="#855d79">STEP 7</text>
+  <text x="412" y="718" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#3a2633">Binary mask + cleanup</text>
+  <text x="412" y="736" font-family="Segoe UI, Arial, sans-serif" font-size="11.5" fill="#7a5b70">keep largest · fill tiny holes · 3×3 morphology</text>
+
+  <!-- 8 -->
+  <g filter="url(#soft)">
+    <rect x="390" y="768" width="420" height="74" rx="12" fill="#dcebf2" stroke="#a9c4d2"/>
+  </g>
+  <text x="412" y="788" font-family="Segoe UI, Arial, sans-serif" font-size="10" letter-spacing="1.4" fill="#4f7485">STEP 8</text>
+  <text x="412" y="812" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#22343a">Contour extraction</text>
+  <text x="412" y="830" font-family="Segoe UI, Arial, sans-serif" font-size="11.5" fill="#52707a">marching squares (subpixel) / findContours</text>
+
+  <!-- 9 -->
+  <g filter="url(#soft)">
+    <rect x="390" y="862" width="420" height="74" rx="12" fill="#fdf3d8" stroke="#d9c48f"/>
+  </g>
+  <text x="412" y="882" font-family="Segoe UI, Arial, sans-serif" font-size="10" letter-spacing="1.4" fill="#8a7444">STEP 9</text>
+  <text x="412" y="906" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#2b2a24">Simplify + smooth</text>
+  <text x="412" y="924" font-family="Segoe UI, Arial, sans-serif" font-size="11.5" fill="#6f644c">RDP ≈ 0.6 px · Chaikin 1× · Bézier optional</text>
+
+  <!-- 10 -->
+  <g filter="url(#soft)">
+    <rect x="390" y="956" width="420" height="74" rx="12" fill="#fbe4d8" stroke="#d9ab90"/>
+  </g>
+  <text x="412" y="976" font-family="Segoe UI, Arial, sans-serif" font-size="10" letter-spacing="1.4" fill="#8d583d">STEP 10</text>
+  <text x="412" y="1000" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#38251c">Output</text>
+  <text x="412" y="1018" font-family="Segoe UI, Arial, sans-serif" font-size="11.5" fill="#79523f">RGBA mask + SVG path + seed/params metadata</text>
+
+  <!-- arrows -->
+  <g stroke="#4a5a5a" stroke-width="1.6" marker-end="url(#arrow)">
+    <line x1="600" y1="184" x2="600" y2="198"/>
+    <line x1="600" y1="278" x2="600" y2="292"/>
+    <line x1="600" y1="372" x2="600" y2="386"/>
+    <line x1="600" y1="466" x2="600" y2="480"/>
+    <line x1="600" y1="560" x2="600" y2="574"/>
+    <line x1="600" y1="654" x2="600" y2="668"/>
+    <line x1="600" y1="748" x2="600" y2="762"/>
+    <line x1="600" y1="842" x2="600" y2="856"/>
+    <line x1="600" y1="936" x2="600" y2="950"/>
+  </g>
+
+  <!-- left callouts -->
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="11.5" fill="#5f6b6b">
+    <text x="356" y="320" text-anchor="end">φ &gt; 0 inside</text>
+    <text x="356" y="337" text-anchor="end">φ &lt; 0 outside</text>
+    <text x="356" y="508" text-anchor="end">F = φ + A · N</text>
+    <text x="356" y="525" text-anchor="end">coast = F = t</text>
+    <text x="356" y="602" text-anchor="end">target area, not</text>
+    <text x="356" y="619" text-anchor="end">a hand-tuned threshold</text>
+    <text x="356" y="696" text-anchor="end">largest component</text>
+    <text x="356" y="713" text-anchor="end">+ hole policy</text>
+  </g>
+  <g stroke="#a8b0b0" stroke-width="1" stroke-dasharray="3 4">
+    <line x1="362" y1="330" x2="390" y2="330"/>
+    <line x1="362" y1="518" x2="390" y2="518"/>
+    <line x1="362" y1="612" x2="390" y2="612"/>
+    <line x1="362" y1="706" x2="390" y2="706"/>
+  </g>
+
+  <!-- bottom note -->
+  <line x1="40" y1="1058" x2="1160" y2="1058" stroke="#d8d4c8"/>
+  <text x="40" y="1082" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#6b7474">Work at 512–1024 px and scale the path to the requested canvas. One seed drives every random choice: octave offsets, rotations, lobe phases and warp offsets.</text>
+</svg>

@@ -1,0 +1,82 @@
+﻿# Integrated vectorisation test for the random island generator.
+#
+#   python main.py orchestrate --config configs/island-svg-sample.yaml
+#
+# The tool writes, inside `space`:
+#   islands/  generated PNGs
+#   svg/      vectorizer output
+#   overlay/  island PNG + SVG paths in a distinct colour
+#   reports/  per-image metrics, summary.json and summary.csv
+#
+# Every value below is optional except `space`, which can also be passed as
+# --space on the command line.
+
+name: island-svg-sample
+seed: 2026
+space: outputs/orchestration/island-svg-sample
+
+generation:
+  count: 8
+  width: 1024
+  height: 768
+  style: natural            # natural | smooth | rugged
+  filled: false             # false = outline line art (also exercises subdivisions)
+  coverage: 0.30            # target land fraction of the short-side square
+  margin: 0.08              # water gap from the canvas edge
+  stroke_width: 0.0         # 0 = automatic (~2.5 px at 1024)
+  islands: [1, 4]           # inclusive range, or an int
+  subdivisions: [0, 4]      # inclusive range, or an int
+  seed_step: 97             # image i uses seed + (i - 1) * seed_step
+
+vectorization:
+  curve: bezier             # bezier | polygon
+  segmentation: curvature   # curvature | blind
+  min_chunk: 5
+  max_chunk: 10
+  smooth_sigma: 2.0
+  chunk_size: 10
+  min_contour_points: 4
+  min_area: 0.0
+  mask: auto                # auto | alpha | luminance
+  # The generator writes an antialiased alpha edge. Alpha > 252, the converter
+  # default for hard-edged scans, shatters that edge into hundreds of slivers;
+  # 128 is the 50% coverage line, i.e. the visible stroke boundary.
+  alpha_threshold: 128
+  luminance_threshold: 128
+  invert: false
+  stroke: "#111111"
+  stroke_width: 1.25
+  fill: none                # none | palette (legacy ink-band mode)
+  precision: 2
+  # Region-aware mode: vectorize the generator's label map instead of the
+  # antialiased stroke band. Adjacent subdivision polygons then share the exact
+  # same cubic border; no drawn line thickness appears in the SVG.
+  region_mode: true
+  region_fill: palette      # palette | solid
+  region_palette: spread    # spread | hue
+  region_color: "#9ec79b"   # used when region_fill is solid
+  region_seam: 0.5          # same-colour hairline to hide renderer AA seams
+  corner_angle: 55.0        # windowed turn (degrees) that splits a border chain
+
+overlay:
+  enabled: true
+  color: "#ff3355"          # distinct from the dark green island outline
+  width: 1.0
+  opacity: 1.0
+  fill: false               # true tints the vectorised region
+  fill_opacity: 0.28
+  background: null          # null keeps the PNG transparent
+
+report:
+  tolerance: 1              # pixels of slack for the IoU headline
+  min_iou: null             # set e.g. 0.70 to fail the run below it
+  min_within_1px: null      # set e.g. 95.0 to fail the run below it
+  min_relative_iou: null    # strict IoU as a fraction of the exact-contour ceiling
+  max_hausdorff_px: null
+  show: detailed            # detailed | compact | summary
+  json: true                # per-image reports + summary.json
+  csv: true                 # summary.csv
+
+
+
+

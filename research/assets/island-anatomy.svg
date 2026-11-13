@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="780" viewBox="0 0 1100 780" role="img" aria-labelledby="title desc">
+  <title id="title">Island anatomy and parameter targets</title>
+  <desc id="desc">A stylised island illustrating capes, bays, peninsulas, an isthmus, a lagoon, an offshore islet, and the long axis controlled by aspect and rotation.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#56736d"/>
+    </marker>
+    <filter id="soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#203530" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="1100" height="780" fill="#d7ebef"/>
+
+  <!-- subtle water texture -->
+  <g stroke="#c3dfe5" stroke-width="1" fill="none" opacity="0.8">
+    <path d="M 40 120 q 30 -8 60 0 t 60 0 t 60 0"/>
+    <path d="M 850 90 q 30 -8 60 0 t 60 0 t 60 0"/>
+    <path d="M 60 690 q 30 -8 60 0 t 60 0 t 60 0"/>
+    <path d="M 880 700 q 30 -8 60 0 t 60 0 t 60 0"/>
+  </g>
+
+  <text x="40" y="52" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" fill="#1f3531">Island anatomy — what the parameters control</text>
+  <text x="40" y="78" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#4b6560">A stylised target, not generated output. The outline should read at thumbnail size and still have detail at full size.</text>
+
+  <!-- long axis guide -->
+  <line x1="290" y1="392" x2="760" y2="392" stroke="#56736d" stroke-width="1.2" stroke-dasharray="6 5" opacity="0.7"/>
+  <line x1="290" y1="392" x2="312" y2="392" stroke="#56736d" stroke-width="1.2" marker-end="url(#arrow)" opacity="0.7"/>
+  <line x1="760" y1="392" x2="738" y2="392" stroke="#56736d" stroke-width="1.2" marker-end="url(#arrow)" opacity="0.7"/>
+  <text x="525" y="382" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#4b6560">long axis — aspect / rotation</text>
+
+  <!-- island -->
+  <g filter="url(#soft)">
+    <path d="M 520,140
+             C 620,125 715,175 735,255
+             C 745,300 715,325 725,360
+             C 735,392 705,405 700,425
+             C 695,450 735,455 745,500
+             C 720,555 660,575 610,550
+             C 575,533 560,500 530,505
+             C 500,510 495,555 455,570
+             C 405,590 345,565 330,515
+             C 318,472 345,445 338,410
+             C 330,372 300,350 305,305
+             C 312,252 355,218 405,215
+             C 445,212 465,235 490,215
+             C 502,205 505,160 520,140 Z"
+          fill="#e7dcc1" stroke="#2f4a44" stroke-width="2.6" stroke-linejoin="round"/>
+  </g>
+
+  <!-- interior hint of dunes / hills, very subtle -->
+  <g fill="none" stroke="#cbbf9f" stroke-width="1.2" opacity="0.7">
+    <path d="M 420 300 q 40 -28 92 -12 q 45 14 62 48"/>
+    <path d="M 450 470 q 34 -18 72 -6"/>
+    <path d="M 390 380 q 25 -16 52 -8"/>
+  </g>
+
+  <!-- lagoon -->
+  <ellipse cx="590" cy="330" rx="58" ry="34" transform="rotate(-24 590 330)" fill="#d7ebef" stroke="#2f4a44" stroke-width="2.2"/>
+  <ellipse cx="590" cy="330" rx="44" ry="22" transform="rotate(-24 590 330)" fill="#c9e4e9" opacity="0.55"/>
+
+  <!-- offshore islet -->
+  <g filter="url(#soft)">
+    <path d="M 838,520
+             C 856,511 878,520 882,538
+             C 886,556 870,573 850,571
+             C 830,569 818,552 822,536
+             C 825,527 830,523 838,520 Z"
+          fill="#e7dcc1" stroke="#2f4a44" stroke-width="2.2"/>
+  </g>
+
+  <!-- labels: left -->
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#243b36">
+    <text x="76" y="198">cape / headland</text>
+    <text x="76" y="217" font-size="11" fill="#5b726d">sharp, high curvature</text>
+
+    <text x="64" y="372">bay</text>
+    <text x="64" y="391" font-size="11" fill="#5b726d">smooth concavity</text>
+
+    <text x="92" y="612">peninsula</text>
+    <text x="92" y="631" font-size="11" fill="#5b726d">narrow, elongated lobe</text>
+
+    <text x="438" y="682">bay mouth</text>
+    <text x="438" y="701" font-size="11" fill="#5b726d">opens to the sea</text>
+  </g>
+
+  <!-- labels: right -->
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#243b36">
+    <text x="676" y="276">lagoon</text>
+    <text x="676" y="295" font-size="11" fill="#5b726d">enclosed water — a hole</text>
+
+    <text x="824" y="438">isthmus</text>
+    <text x="824" y="457" font-size="11" fill="#5b726d">thin neck — width check</text>
+
+    <text x="900" y="590">offshore islet</text>
+    <text x="900" y="609" font-size="11" fill="#5b726d">optional; keep by area</text>
+
+    <text x="792" y="162">rough coast detail</text>
+    <text x="792" y="181" font-size="11" fill="#5b726d">multi-scale, not uniform</text>
+  </g>
+
+  <!-- leader lines and feature dots -->
+  <g stroke="#56736d" stroke-width="1" stroke-dasharray="3 4" fill="none">
+    <path d="M 214 202 L 376 238"/>
+    <path d="M 175 368 L 314 390"/>
+    <path d="M 190 607 L 356 552"/>
+    <path d="M 510 674 L 512 548"/>
+    <path d="M 664 284 L 632 318"/>
+    <path d="M 816 442 L 700 425"/>
+    <path d="M 892 584 L 862 552"/>
+    <path d="M 788 166 L 704 214"/>
+  </g>
+  <g fill="#2f4a44">
+    <circle cx="376" cy="238" r="3.2"/>
+    <circle cx="314" cy="390" r="3.2"/>
+    <circle cx="356" cy="552" r="3.2"/>
+    <circle cx="512" cy="548" r="3.2"/>
+    <circle cx="632" cy="318" r="3.2"/>
+    <circle cx="700" cy="425" r="3.2"/>
+    <circle cx="862" cy="552" r="3.2"/>
+    <circle cx="704" cy="214" r="3.2"/>
+  </g>
+
+  <!-- bottom parameter strip -->
+  <g>
+    <rect x="40" y="716" width="1020" height="50" rx="10" fill="#ffffff" opacity="0.80" stroke="#b9d4d8"/>
+    <text x="58" y="736" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#3b5550">
+      coverage = area · margin = water gap · aspect / rotation = long axis · lobes / lobe_strength = major capes
+    </text>
+    <text x="58" y="753" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#3b5550">
+      hurst / warp / coast_amp = roughness · islands / lagoons = topology
+    </text>
+  </g>
+</svg>

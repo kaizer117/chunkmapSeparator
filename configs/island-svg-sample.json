@@ -1,0 +1,65 @@
+﻿{
+  "name": "island-svg-sample",
+  "seed": 2026,
+  "space": "outputs/orchestration/island-svg-sample",
+  "generation": {
+    "count": 8,
+    "width": 1024,
+    "height": 768,
+    "style": "natural",
+    "filled": false,
+    "coverage": 0.30,
+    "margin": 0.08,
+    "stroke_width": 0.0,
+    "islands": [1, 4],
+    "subdivisions": [0, 4],
+    "seed_step": 97
+  },
+  "vectorization": {
+    "curve": "bezier",
+    "segmentation": "curvature",
+    "min_chunk": 5,
+    "max_chunk": 10,
+    "smooth_sigma": 2.0,
+    "chunk_size": 10,
+    "min_contour_points": 4,
+    "min_area": 0.0,
+    "mask": "auto",
+    "alpha_threshold": 128,
+    "luminance_threshold": 128,
+    "invert": false,
+    "stroke": "#111111",
+    "stroke_width": 1.25,
+    "fill": "none",
+    "precision": 2,
+    "region_mode": true,
+    "region_fill": "palette",
+    "region_palette": "spread",
+    "region_color": "#9ec79b",
+    "region_seam": 0.5,
+    "corner_angle": 55.0
+  },
+  "overlay": {
+    "enabled": true,
+    "color": "#ff3355",
+    "width": 1.0,
+    "opacity": 1.0,
+    "fill": false,
+    "fill_opacity": 0.28,
+    "background": null
+  },
+  "report": {
+    "tolerance": 1,
+    "min_iou": null,
+    "min_within_1px": null,
+    "min_relative_iou": null,
+    "max_hausdorff_px": null,
+    "show": "detailed",
+    "json": true,
+    "csv": true
+  }
+}
+
+
+
+
